@@ -146,6 +146,7 @@ echo \fbalabanov\filekit\widget\Upload::widget([
     'model' => $model,
     'attribute' => 'files',
     'url' => ['upload'],
+    'targetDir' => 'path', // 'place1/image',
     'sortable' => true,
     'maxFileSize' => 10 * 1024 * 1024, // 10Mb
     'minFileSize' => 1 * 1024 * 1024, // 1Mb
@@ -162,6 +163,7 @@ echo $form->field($model, 'files')->widget(
     '\fbalabanov\filekit\widget\Upload',
     [
         'url' => ['upload'],
+	'targetDir' => 'path', // 'place2/image',
         'sortable' => true,
         'maxFileSize' => 10 * 1024 * 1024, // 10 MiB
         'maxNumberOfFiles' => 3,

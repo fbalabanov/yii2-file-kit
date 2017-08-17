@@ -65,6 +65,10 @@ class Upload extends InputWidget
      */
     public $messagesCategory = 'filekit/widget';
     /**
+     * @var string
+     */
+    public $targetDir;
+    /**
      * @var bool preview image file or not in the upload box.
      */
     public $previewImage = true;
@@ -93,6 +97,9 @@ class Upload extends InputWidget
         }
         if (!array_key_exists('fileparam', $this->url)) {
             $this->url['fileparam'] = $this->getFileInputName();
+        }
+        if (!array_key_exists('targetDir', $this->url)) {
+            $this->url['targetDir'] = $this->targetDir;
         }
         if (!$this->files && $this->value) {
             $this->files = $this->multiple ? $this->value : [$this->value];

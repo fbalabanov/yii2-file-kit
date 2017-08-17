@@ -77,6 +77,10 @@ class UploadAction extends BaseAction
      * @var string
      */
     public $deleteRoute = 'delete';
+    /**
+     * @var string
+     */
+    public $targetDir = 'default';
 
     /**
      * @var array
@@ -93,6 +97,10 @@ class UploadAction extends BaseAction
 
         if (\Yii::$app->request->get('fileparam')) {
             $this->fileparam = \Yii::$app->request->get('fileparam');
+        }
+
+        if (\Yii::$app->request->get('targetDir')) {
+            $this->targetDir = \Yii::$app->request->get('targetDir');
         }
 
         if ($this->disableCsrf) {
@@ -120,6 +128,7 @@ class UploadAction extends BaseAction
             if ($uploadedFile->error === UPLOAD_ERR_OK) {
                 $validationModel = DynamicModel::validateData(['file' => $uploadedFile], $this->validationRules);
                 if (!$validationModel->hasErrors()) {
+                    $this->getFileStorage()->setTargetDir($this->targetDir);
                     $path = $this->getFileStorage()->save($uploadedFile);
 
                     if ($path) {
