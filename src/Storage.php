@@ -97,7 +97,7 @@ class Storage extends Component
      */
     public function setTargetDir($targetDirName)
     {
-        $this->targetDir = $targetDir;
+        $this->targetDir = $targetDirName."/";
     }
     /**
      * @param $file string|\yii\web\UploadedFile
