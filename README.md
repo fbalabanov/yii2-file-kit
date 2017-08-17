@@ -1,5 +1,5 @@
-[![Packagist](https://img.shields.io/packagist/dt/trntv/yii2-file-kit.svg)]()
-[![Dependency Status](https://www.versioneye.com/php/trntv:yii2-file-kit/badge.svg)](https://www.versioneye.com/php/trntv:yii2-file-kit/2.0.0)
+[![Packagist](https://img.shields.io/packagist/dt/fbalabanov/yii2-file-kit.svg)]()
+[![Dependency Status](https://www.versioneye.com/php/fbalabanov:yii2-file-kit/badge.svg)](https://www.versioneye.com/php/fbalabanov:yii2-file-kit/2.0.0)
 
 This kit is designed to automate routine processes of uploading files, their saving and storage.
 It includes:
@@ -12,7 +12,7 @@ Here you can see list of available [filesystem adapters](https://github.com/thep
 
 Demo
 ----
-Since file kit is a part of [yii2-starter-kit](https://github.com/trntv/yii2-starter-kit) it's demo can be found in starter kit demo [here](http://backend.yii2-starter-kit.terentev.net/article/create).
+Since file kit is a part of [yii2-starter-kit](https://github.com/fbalabanov/yii2-starter-kit) it's demo can be found in starter kit demo [here](http://backend.yii2-starter-kit.terentev.net/article/create).
 
 # Installation
 The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
@@ -20,13 +20,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require trntv/yii2-file-kit
+php composer.phar require fbalabanov/yii2-file-kit
 ```
 
 or add
 
 ```
-"trntv/yii2-file-kit": "@stable"
+"fbalabanov/yii2-file-kit": "@stable"
 ```
 
 to the require section of your `composer.json` file.
@@ -36,14 +36,14 @@ To work with the File Kit you need to configure FileStorage first. This componen
 - Its main task to take on the generation of a unique name for each file and trigger corresponding events.
 ```php
 'fileStorage'=>[
-    'class' => 'trntv\filekit\Storage',
+    'class' => 'fbalabanov\filekit\Storage',
     'baseUrl' => '@web/uploads'
     'filesystem'=> ...
         // OR
     'filesystemComponent' => ...    
 ],
 ```
-There are several ways to configure `trntv\filekit\Storage` to work with `flysystem`.
+There are several ways to configure `fbalabanov\filekit\Storage` to work with `flysystem`.
 
 ## Using Closure
 ```php
@@ -56,7 +56,7 @@ There are several ways to configure `trntv\filekit\Storage` to work with `flysys
 ]
 ```
 ## Using filesystem builder 
-- Create a builder class that implements `trntv\filekit\filesystem\FilesystemBuilderInterface` and implement method `build` which returns filesystem object. See ``examples/``
+- Create a builder class that implements `fbalabanov\filekit\filesystem\FilesystemBuilderInterface` and implement method `build` which returns filesystem object. See ``examples/``
 - Add to your configuration:
 ```php
 'fileStorage'=>[
@@ -102,7 +102,7 @@ Designed to save the file uploaded by the widget
 public function actions(){
     return [
            'upload'=>[
-               'class'=>'trntv\filekit\actions\UploadAction',
+               'class'=>'fbalabanov\filekit\actions\UploadAction',
                //'deleteRoute' => 'my-custom-delete', // my custom delete action for deleting just uploaded files(not yet saved)
                //'fileStorage' => 'myfileStorage', // my custom fileStorage from configuration
                'multiple' => true,
@@ -139,7 +139,7 @@ See additional settings in the corresponding class
 public function actions(){
     return [
        'delete'=>[
-           'class'=>'trntv\filekit\actions\DeleteAction',
+           'class'=>'fbalabanov\filekit\actions\DeleteAction',
            //'fileStorage' => 'fileStorageMy', // my custom fileStorage from configuration(such as in the upload action)
        ]
     ];
@@ -152,7 +152,7 @@ See additional settings in the corresponding class
 public function actions(){
     return [
        'view'=>[
-           'class'=>'trntv\filekit\actions\ViewAction',
+           'class'=>'fbalabanov\filekit\actions\ViewAction',
        ]
     ];
 }
@@ -162,7 +162,7 @@ See additional settings in the corresponding class
 # Upload Widget
 Standalone usage
 ```php
-echo \trntv\filekit\widget\Upload::widget([
+echo \fbalabanov\filekit\widget\Upload::widget([
     'model' => $model,
     'attribute' => 'files',
     'url' => ['upload'],
@@ -179,7 +179,7 @@ echo \trntv\filekit\widget\Upload::widget([
 With ActiveForm
 ```php
 echo $form->field($model, 'files')->widget(
-    '\trntv\filekit\widget\Upload',
+    '\fbalabanov\filekit\widget\Upload',
     [
         'url' => ['upload'],
         'sortable' => true,
@@ -217,7 +217,7 @@ For multiple files
  {
     return [
         'file' => [
-            'class' => 'trntv\filekit\behaviors\UploadBehavior',
+            'class' => 'fbalabanov\filekit\behaviors\UploadBehavior',
             'filesStorage' => 'myfileStorage', // my custom fileStorage from configuration(for properly remove the file from disk)
             'multiple' => true,
             'attribute' => 'files',
@@ -239,7 +239,7 @@ For single file upload
  {
      return [
           'file' => [
-              'class' => 'trntv\filekit\behaviors\UploadBehavior',
+              'class' => 'fbalabanov\filekit\behaviors\UploadBehavior',
               'filesStorage' => 'fileStorageMy', // my custom fileStorage from configuration(for properly remove the file from disk)
               'attribute' => 'file',
               'pathAttribute' => 'path',
@@ -271,7 +271,7 @@ Edit your upload actions as so
 public function actions(){
     return [
            'upload'=>[
-               'class'=>'trntv\filekit\actions\UploadAction',
+               'class'=>'fbalabanov\filekit\actions\UploadAction',
                ...
                'on afterSave' => function($event) {
                     /* @var $file \League\Flysystem\File */

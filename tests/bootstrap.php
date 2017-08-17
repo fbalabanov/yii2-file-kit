@@ -11,4 +11,4 @@ $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 require_once(__DIR__ . '/../vendor/autoload.php');
 require_once(__DIR__ . '/../vendor/yiisoft/yii2/Yii.php');
 
-Yii::setAlias('@trntv/filekit', dirname(__DIR__));
+Yii::setAlias('@fbalabanov/filekit', dirname(__DIR__));

@@ -1,8 +1,8 @@
 <?php
 
-namespace trntv\filekit\tests;
+namespace fbalabanov\filekit\tests;
 
-use trntv\filekit\Storage;
+use fbalabanov\filekit\Storage;
 
 /**
  * @author Eugene Terentev <eugene@terentev.net>
@@ -13,7 +13,7 @@ class StorageTest extends TestCase
     {
         $storage = new Storage([
             'filesystem' => [
-                'class' => 'trntv\filekit\tests\data\TmpFilesystemBuilder'
+                'class' => 'fbalabanov\filekit\tests\data\TmpFilesystemBuilder'
             ]
         ]);
 

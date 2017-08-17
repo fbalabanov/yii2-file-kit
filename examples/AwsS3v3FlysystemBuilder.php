@@ -1,7 +1,7 @@
 <?php
 
 use League\Flysystem\Filesystem;
-use trntv\filekit\filesystem\FilesystemBuilderInterface;
+use fbalabanov\filekit\filesystem\FilesystemBuilderInterface;
 use yii\base\Object;
 
 /**

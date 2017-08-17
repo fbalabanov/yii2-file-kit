@@ -2,12 +2,12 @@
 
 use League\Flysystem\Filesystem;
 use League\Flysystem\WebDAV\WebDAVAdapter;
-use trntv\filekit\filesystem\FilesystemBuilderInterface;
+use fbalabanov\filekit\filesystem\FilesystemBuilderInterface;
 
 /**
  * Class WebDAVFlysystemBuilder
  * @author Artem Dekhtyar <mail@artemd.ru>
- * @link https://github.com/trntv/yii2-file-kit/issues/46
+ * @link https://github.com/fbalabanov/yii2-file-kit/issues/46
  */
 class WebDAVFlysystemBuilder implements FilesystemBuilderInterface
 {
@@ -17,8 +17,8 @@ class WebDAVFlysystemBuilder implements FilesystemBuilderInterface
     public function build()
     {
 
-        \yii\base\Event::on(\trntv\filekit\Storage::className(), \trntv\filekit\Storage::EVENT_BEFORE_SAVE, function ($event) {
-            /** @var \trntv\filekit\Storage $storage */
+        \yii\base\Event::on(\fbalabanov\filekit\Storage::className(), \fbalabanov\filekit\Storage::EVENT_BEFORE_SAVE, function ($event) {
+            /** @var \fbalabanov\filekit\Storage $storage */
             $storage = $event->sender;
 
             if (!$storage->getFilesystem()->has('.dirindex')) {

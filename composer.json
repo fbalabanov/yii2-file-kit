@@ -1,5 +1,5 @@
 {
-    "name": "trntv/yii2-file-kit",
+    "name": "fbalabanov/yii2-file-kit",
     "description": "Yii2 file upload and storage kit",
     "type": "yii2-extension",
     "license": "BSD-3-Clause",
@@ -21,7 +21,7 @@
         "creocoder/yii2-flysystem": "~0.8"
     },
     "autoload": {
-        "psr-4": { "trntv\\filekit\\": "src/" }
+        "psr-4": { "fbalabanov\\filekit\\": "src/" }
     },
     "extra":{
         "asset-installer-paths": {
