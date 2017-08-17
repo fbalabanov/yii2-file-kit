@@ -10,26 +10,6 @@ It includes:
 
 Here you can see list of available [filesystem adapters](https://github.com/thephpleague/flysystem#adapters)
 
-Demo
-----
-Since file kit is a part of [yii2-starter-kit](https://github.com/fbalabanov/yii2-starter-kit) it's demo can be found in starter kit demo [here](http://backend.yii2-starter-kit.terentev.net/article/create).
-
-# Installation
-The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
-
-Either run
-
-```
-php composer.phar require fbalabanov/yii2-file-kit
-```
-
-or add
-
-```
-"fbalabanov/yii2-file-kit": "@stable"
-```
-
-to the require section of your `composer.json` file.
 
 # File Storage
 To work with the File Kit you need to configure FileStorage first. This component is a layer of abstraction over the filesystem
