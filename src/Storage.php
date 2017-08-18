@@ -127,7 +127,7 @@ class Storage extends Component
 
         $this->beforeSave($fileObj->getPath(), $this->getFilesystem());
 
-        $stream = fopen($fileObj->getPath(), 'rb+');
+        $stream = fopen($fileObj->getPath(), 'r+');
 
         $config = array_merge(['ContentType' => $fileObj->getMimeType()], $config);
         if ($overwrite) {
