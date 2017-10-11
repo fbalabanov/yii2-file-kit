@@ -42,6 +42,15 @@ class Storage extends Component
     /**
      * @var
      */
+    public $thumbDir;
+    /**
+     * @var
+     */
+    public $thumbnails;
+
+    /**
+     * @var
+     */
     public $filesystemComponent;
     /**
      * @var
@@ -99,6 +108,10 @@ class Storage extends Component
     {
         $this->targetDir = $targetDirName."/";
     }
+    public function setThumbnails($thumbnails)
+    {
+        $this->thumbnails = $thumbnails;
+    }
     /**
      * @param $file string|\yii\web\UploadedFile
      * @param bool $preserveFileName
@@ -134,6 +147,18 @@ class Storage extends Component
             $success = $this->getFilesystem()->putStream($path, $stream, $config);
         } else {
             $success = $this->getFilesystem()->writeStream($path, $stream, $config);
+        }
+
+        if ( count($this->thumbnails) > 0 ) {
+            foreach ($this->thumbnails as $eachThumbnail) {
+                $thumbSufName = $eachThumbnail[0]."_".$eachThumbnail[1]."_";
+                $thumbPath = $this->targetDir . '/thumbnails/'. $thumbSufName . implode('/', [$dirIndex, $filename]);
+                if ($this->isImage($fileObj)) {
+                    $img = ImageManagerStatic::make($stream)->fit(512, 512);
+                } else {
+
+                }
+            }
         }
 
 		if (is_resource($stream)) {
@@ -273,5 +298,16 @@ class Storage extends Component
             'filesystem' => $filesystem
         ]);
         $this->trigger(self::EVENT_AFTER_DELETE, $event);
+    }
+
+    private function isImage($file){
+        $allowedTypes = array('image/png', 'image/jpeg', 'image/jpg', 'image/gif');
+        $detectedType = $file->getMimetype();
+        $isImageFlag = in_array($detectedType, $allowedTypes);
+        if($isImageFlag) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -82,6 +82,10 @@ class UploadAction extends BaseAction
      */
     public $targetDir = 'default';
 
+	public $uploadCategory = 'file';
+
+	public $thumbnails = [];
+
     /**
      * @var array
      * @see https://github.com/yiisoft/yii2/blob/master/docs/guide/input-validation.md#ad-hoc-validation-
@@ -101,6 +105,10 @@ class UploadAction extends BaseAction
 
         if (\Yii::$app->request->get('targetDir')) {
             $this->targetDir = \Yii::$app->request->get('targetDir');
+        }
+
+        if (\Yii::$app->request->get('thumbnails')) {
+            $this->thumbnails = \Yii::$app->request->get('thumbnails');
         }
 
         if ($this->disableCsrf) {
@@ -129,6 +137,9 @@ class UploadAction extends BaseAction
                 $validationModel = DynamicModel::validateData(['file' => $uploadedFile], $this->validationRules);
                 if (!$validationModel->hasErrors()) {
                     $this->getFileStorage()->setTargetDir($this->targetDir);
+                    if ( count($this->thumbnails) > 0 ) {
+                        $this->getFileStorage()->setThumbnails($this->thumbnails);
+                    }
                     $path = $this->getFileStorage()->save($uploadedFile);
 
                     if ($path) {

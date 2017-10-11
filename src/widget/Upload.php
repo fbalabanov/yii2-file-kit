@@ -75,6 +75,8 @@ class Upload extends InputWidget
 
 	public $uploadCategory = "file";
 
+	public $thumbnails;
+
     /**
      * @throws \yii\base\InvalidConfigException
      */
