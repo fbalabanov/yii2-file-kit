@@ -156,7 +156,8 @@ class Storage extends Component
             }
             if (!$this->isImage($fileObj)) {
                 $tempfileName = '../../tmp/'.$fileObj->getPathInfo('filename')."_frame.jpg";
-                $originThumbpath = $this->targetDir . '/'. $dirIndex . '/thumbnails/'. $fileObj->getPathInfo('filename') .".jpg";
+                $uploadThumbFileName = pathinfo($filename, PATHINFO_FILENAME ).".jpg";
+                $originThumbpath = $this->targetDir . '/thumbnails/' . implode('/', [$dirIndex, $uploadThumbFileName]);
                 $ffmpeg = \FFMpeg\FFMpeg::create();
                 $ffprobe = \FFMpeg\FFProbe::create();
                 $duration = $ffprobe
@@ -177,12 +178,14 @@ class Storage extends Component
                 $thumbSufName = $eachThumbnail[0]."_".$eachThumbnail[1]."_";
 
                 if ($this->isImage($fileObj)) {
-                    $thumbPath = $this->targetDir . '/thumbnails/'. $thumbSufName . implode('/', [$dirIndex, $filename]);
+                    $uploadThumbFileName = $thumbSufName.$filename;
+                    $thumbPath = $this->targetDir . '/thumbnails/' . implode('/', [$dirIndex, $uploadThumbFileName]);
                     $thumbImage = ImageManagerStatic::make($stream)->fit($eachThumbnail[0], $eachThumbnail[1]);
                     $this->getFilesystem()->writeStream($thumbPath, $thumbImage, $config);
                 } else {
+                    $uploadThumbFileName = $thumbSufName.pathinfo($filename, PATHINFO_FILENAME ).".jpg";
                     $tempfileName = '../../tmp/'.$thumbSufName.$fileObj->getPathInfo('filename')."_frame.jpg";
-                    $thumbPath = $this->targetDir .'/'. $dirIndex . '/thumbnails/'. $thumbSufName . $fileObj->getPathInfo('filename') .".jpg";
+                    $thumbPath = $this->targetDir . '/thumbnails/' . implode('/', [$dirIndex, $uploadThumbFileName]);
                     $video
                         ->filters()
                         ->resize(new \FFMpeg\Coordinate\Dimension($eachThumbnail[0], $eachThumbnail[1]))
