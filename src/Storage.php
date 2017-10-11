@@ -151,12 +151,26 @@ class Storage extends Component
         }
 
         if ( count($this->thumbnails) > 0 ) {
+            if (!file_exists('../../tmp')) {
+                mkdir('../../tmp', 0777, true);
+            }
             if (!$this->isImage($fileObj)) {
+                $tempfileName = '../../tmp/'.$fileObj->getPathInfo('filename')."_frame.jpg";
                 $originThumbpath = $this->targetDir . '/thumbnails/'. $fileObj->getPathInfo('filename') .".jpg";
                 $ffmpeg = \FFMpeg\FFMpeg::create();
+                $ffprobe = \FFMpeg\FFProbe::create();
+                $duration = $ffprobe
+                    ->format($fileObj->getPath()) // extracts file informations
+                    ->get('duration');
+                $thumbAt = round($duration / 3);
                 $video = $ffmpeg->open($fileObj->getPath());
-                $frame = $video->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds(1));
-                $this->getFilesystem()->writeStream($originThumbpath, $frame, $config);
+                $frame = $video->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds($thumbAt))->save($tempfileName);
+                $tmpStream = fopen($tempfileName, 'r+');
+                $this->getFilesystem()->writeStream($originThumbpath, $tmpStream, $config);
+                if (is_resource($tmpStream)) {
+                    fclose($tmpStream);
+                    unlink($tempfileName);
+                }
 
             }
             foreach ($this->thumbnails as $eachThumbnail) {
@@ -165,13 +179,19 @@ class Storage extends Component
                 if ($this->isImage($fileObj)) {
                     $thumbImage = ImageManagerStatic::make($stream)->fit($eachThumbnail[0], $eachThumbnail[1]);
                 } else {
+                    $tempfileName = '../../tmp/'.$thumbSufName.$fileObj->getPathInfo('filename')."_frame.jpg";
                     $thumbPath = $this->targetDir . '/thumbnails/'. $thumbSufName . $fileObj->getPathInfo('filename') .".jpg";
                     $video
                         ->filters()
                         ->resize(new \FFMpeg\Coordinate\Dimension($eachThumbnail[0], $eachThumbnail[1]))
                         ->synchronize();
-                    $frame = $video->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds(1));
-                    $this->getFilesystem()->writeStream($originThumbpath, $frame, $config);
+                    $frame = $video->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds($thumbAt))->save($tempfileName);
+                    $tmpStream = fopen($tempfileName, 'r+');
+                    $this->getFilesystem()->writeStream($originThumbpath, $tmpStream, $config);
+                    if (is_resource($tmpStream)) {
+                        fclose($tmpStream);
+                        unlink($tempfileName);
+                    }
 
                 }
             }
