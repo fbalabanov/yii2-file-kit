@@ -1,0 +1,31 @@
+<?php
+/**
+ * Author: Eugine Terentev <eugine@terentev.net>
+ */
+
+namespace fbalabanov\filekit\widget;
+
+use yii\web\AssetBundle;
+
+class UploadMediaAsset extends AssetBundle
+{
+
+    public $depends = [
+        'yii\web\JqueryAsset',
+        'yii\bootstrap\BootstrapAsset',
+        'fbalabanov\filekit\widget\BlueimpFileuploadAsset'
+    ];
+
+    public function init()
+    {
+        $this->sourcePath = __DIR__ . "/assets";
+        $this->css = [
+            YII_DEBUG ? 'css/upload-kit.css' : 'css/upload-kit.min.css'
+        ];
+
+        $this->js = [
+            YII_DEBUG ? 'js/upload-kit-media.js' : 'js/upload-kit-media.min.js'
+        ];
+        parent::init();
+    }
+}

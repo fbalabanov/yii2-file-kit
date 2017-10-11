@@ -73,6 +73,8 @@ class Upload extends InputWidget
      */
     public $previewImage = true;
 
+	public $uploadCategory = "file";
+
     /**
      * @throws \yii\base\InvalidConfigException
      */
@@ -182,11 +184,22 @@ class Upload extends InputWidget
      */
     public function registerClientScript()
     {
-        UploadAsset::register($this->getView());
-        $options = Json::encode($this->clientOptions);
-        if ($this->sortable) {
-            JuiAsset::register($this->getView());
-        }
-        $this->getView()->registerJs("jQuery('#{$this->getId()}').yiiUploadKit({$options});");
+		if ($this->uploadCategory === "file") {
+			UploadAsset::register($this->getView());
+			$options = Json::encode($this->clientOptions);
+			if ($this->sortable) {
+				JuiAsset::register($this->getView());
+			}
+			$this->getView()->registerJs("jQuery('#{$this->getId()}').yiiUploadKit({$options});");
+
+		} else {
+			UploadMediaAsset::register($this->getView());
+			$options = Json::encode($this->clientOptions);
+			if ($this->sortable) {
+				JuiAsset::register($this->getView());
+			}
+			$this->getView()->registerJs("jQuery('#{$this->getId()}').yiiUploadKit({$options});");
+
+		}
     }
 }
