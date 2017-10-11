@@ -7,6 +7,7 @@ use fbalabanov\filekit\events\StorageEvent;
 use fbalabanov\filekit\filesystem\FilesystemBuilderInterface;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
+use Intervention\Image\ImageManagerStatic;
 
 /**
  * Class Storage
@@ -150,20 +151,35 @@ class Storage extends Component
         }
 
         if ( count($this->thumbnails) > 0 ) {
+            if (!$this->isImage($fileObj)) {
+                $originThumbpath = $this->targetDir . '/thumbnails/'. $fileObj->getPathInfo('filename') .".jpg";
+                $ffmpeg = \FFMpeg\FFMpeg::create();
+                $video = $ffmpeg->open($fileObj->getPath());
+                $frame = $video->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds(1));
+                $this->getFilesystem()->writeStream($originThumbpath, $frame, $config);
+
+            }
             foreach ($this->thumbnails as $eachThumbnail) {
                 $thumbSufName = $eachThumbnail[0]."_".$eachThumbnail[1]."_";
                 $thumbPath = $this->targetDir . '/thumbnails/'. $thumbSufName . implode('/', [$dirIndex, $filename]);
                 if ($this->isImage($fileObj)) {
-                    $img = ImageManagerStatic::make($stream)->fit(512, 512);
+                    $thumbImage = ImageManagerStatic::make($stream)->fit($eachThumbnail[0], $eachThumbnail[1]);
                 } else {
+                    $thumbPath = $this->targetDir . '/thumbnails/'. $thumbSufName . $fileObj->getPathInfo('filename') .".jpg";
+                    $video
+                        ->filters()
+                        ->resize(new \FFMpeg\Coordinate\Dimension($eachThumbnail[0], $eachThumbnail[1]))
+                        ->synchronize();
+                    $frame = $video->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds(1));
+                    $this->getFilesystem()->writeStream($originThumbpath, $frame, $config);
 
                 }
             }
         }
 
-		if (is_resource($stream)) {
-			fclose($stream);
-		}
+        if (is_resource($stream)) {
+            fclose($stream);
+        }
 
         if ($success) {
             $this->afterSave($path, $this->getFilesystem());
