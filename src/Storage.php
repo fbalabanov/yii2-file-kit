@@ -150,6 +150,10 @@ class Storage extends Component
             $success = $this->getFilesystem()->writeStream($path, $stream, $config);
         }
 
+        if (is_resource($stream)) {
+            fclose($stream);
+        }
+
         if ( count($this->thumbnails) > 0 ) {
             if (!file_exists('../../tmp')) {
                 mkdir('../../tmp', 0777, true);
@@ -179,9 +183,18 @@ class Storage extends Component
 
                 if ($this->isImage($fileObj)) {
                     $uploadThumbFileName = $thumbSufName.$filename;
+                    $tempfileName = '../../tmp/'.$thumbSufName.$fileObj->getPathInfo('filename')."_thumb.".$fileObj->getExtension();
                     $thumbPath = $this->targetDir . '/thumbnails/' . implode('/', [$dirIndex, $uploadThumbFileName]);
-                    $thumbImage = ImageManagerStatic::make($stream)->fit($eachThumbnail[0], $eachThumbnail[1]);
-                    $this->getFilesystem()->writeStream($thumbPath, $thumbImage, $config);
+                    $thumbImage = ImageManagerStatic::make($fileObj->getPath())->fit($eachThumbnail[0], $eachThumbnail[1]);
+                    $thumbImage->save($tempfileName);
+                    $tmpStream = fopen($tempfileName, 'r+');
+                    $this->getFilesystem()->writeStream($thumbPath, $tmpStream, $config);
+
+                    if (is_resource($tmpStream)) {
+                        fclose($tmpStream);
+                        unlink($tempfileName);
+                    }
+
                 } else {
                     $uploadThumbFileName = $thumbSufName.pathinfo($filename, PATHINFO_FILENAME ).".jpg";
                     $tempfileName = '../../tmp/'.$thumbSufName.$fileObj->getPathInfo('filename')."_frame.jpg";
@@ -200,10 +213,6 @@ class Storage extends Component
 
                 }
             }
-        }
-
-        if (is_resource($stream)) {
-            fclose($stream);
         }
 
         if ($success) {
